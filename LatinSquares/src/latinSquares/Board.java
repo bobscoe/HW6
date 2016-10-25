@@ -25,7 +25,7 @@ public class Board {
 					domain.add(j);
 				}
 			}
-			variables.add( new Variable( domain ) );
+			variables.add( new Variable( domain, i ) );
 		}
 		
 		Node rootNode = new Node( this.board, variables, null );

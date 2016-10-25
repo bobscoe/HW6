@@ -6,8 +6,10 @@ public class Variable {
 
 	ArrayList<Integer> domain;
 	Boolean hasValue = false;
+	Integer id;
 	
-	public Variable( ArrayList<Integer> domain ) {
+	public Variable( ArrayList<Integer> domain, Integer id ) {
+		this.id = id;
 		this.domain = domain;
 	}
 }
