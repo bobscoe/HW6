@@ -1,0 +1,44 @@
+package latinSquares;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public class Main {
+
+	public static char[][] puzzle1 = 
+		{{'-','-','-','-','-'},
+		{'-','-','-','-','-'},
+		{'-','-','-','-','-'},
+		{'-','-','x','-','-'},
+		{'x','-','-','-','-'}};
+		
+	public static ArrayList<Position> adjacencyList = new ArrayList<Position>();
+	public static ArrayList<Integer> adjacencyValue = new ArrayList<Integer>();
+	
+	public static void main() throws NumberFormatException, IOException {
+		
+		//puzzle 1 list & values
+		adjacencyList.add( new Position(4,0));
+		adjacencyValue.add(0);
+		adjacencyList.add( new Position(3,2));
+		adjacencyValue.add(1);
+		ConstraintChecker cc = new ConstraintChecker( adjacencyList, adjacencyValue );
+		
+		System.out.println("Please choose a puzzle 1-4:");
+		BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
+		Integer choice = Integer.parseInt( br.readLine() ); 
+		switch( choice ) {
+		case 1:
+			
+			Board board = new Board( puzzle1, cc );
+			board.solve();
+			break;
+		//rest of cases
+		default:
+			break;
+		
+		}
+	}
+}
