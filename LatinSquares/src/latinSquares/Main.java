@@ -11,33 +11,86 @@ public class Main {
 		{{'-','-','-','-','-'},
 		{'-','-','-','-','-'},
 		{'-','-','-','-','-'},
-		{'-','-','x','-','-'},
-		{'x','-','-','-','-'}};
+		{'-','-','1','-','-'},
+		{'0','-','-','-','-'}};
 		
+	public static char[][] puzzle2 =
+		{{'-','-','-','-','-','-'},
+		{'-','-','-','-','-','-'},
+		{'-','-','-','-','-','-'},
+		{'-','-','-','-','-','-'},
+		{'-','-','-','2','-','-'},
+		{'-','0','-','-','-','-'}};
+			
+	public static char[][] puzzle3 =
+		{{'-','-','-','-','-','-'},
+		{'-','-','-','-','-','-'},
+		{'-','-','-','1','-','-'},
+		{'-','-','-','-','-','2'},
+		{'-','-','-','-','-','-'},
+		{'1','-','-','-','-','-'}};
+	
+	public static char[][] puzzle4 =
+		{{'-','-','-','-','2','-','-'},
+		{'-','-','-','-','-','-','-'},
+		{'-','-','-','-','-','-','-'},
+		{'-','-','-','-','-','-','-'},
+		{'-','-','-','-','-','-','-'},
+		{'-','-','-','0','-','-','-'},
+		{'1','-','-','-','-','-','-'}};
+	
 	public static ArrayList<Position> adjacencyList = new ArrayList<Position>();
 	public static ArrayList<Integer> adjacencyValue = new ArrayList<Integer>();
 	
 	public static void main(String []args) throws NumberFormatException, IOException {
 		
-		//puzzle 1 list & values
-		adjacencyList.add( new Position(4,0));
-		adjacencyValue.add(0);
-		adjacencyList.add( new Position(3,2));
-		adjacencyValue.add(1);
-		ConstraintChecker cc = new ConstraintChecker( adjacencyList, adjacencyValue );
-		
 		System.out.println("Please choose a puzzle 1-4:");
 		BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
 		Integer choice = Integer.parseInt( br.readLine() ); 
-		switch( choice ) {
-		case 1:
-			
-			Board board = new Board( puzzle1, cc );
-			board.solve();
-			break;
-		//rest of cases
-		default:
-			break;
+		switch( choice ) 
+		{
+			case 1:
+				adjacencyList.add( new Position(4,0));
+				adjacencyValue.add(0);
+				adjacencyList.add( new Position(3,2));
+				adjacencyValue.add(1);
+				ConstraintChecker cc1 = new ConstraintChecker( adjacencyList, adjacencyValue );
+				Board board1 = new Board( puzzle1, cc1 );
+				board1.solve();
+				break;
+			case 2:
+				adjacencyList.add( new Position(5,1));
+				adjacencyValue.add(0);
+				adjacencyList.add( new Position(4,3));
+				adjacencyValue.add(2);
+				ConstraintChecker cc2 = new ConstraintChecker( adjacencyList, adjacencyValue );
+				Board board2 = new Board( puzzle2, cc2 );
+				board2.solve();
+				break;
+			case 3:
+				adjacencyList.add( new Position(5,0));
+				adjacencyValue.add(1);
+				adjacencyList.add( new Position(3,5));
+				adjacencyValue.add(2);
+				adjacencyList.add( new Position(2,3));
+				adjacencyValue.add(1);
+				ConstraintChecker cc3 = new ConstraintChecker( adjacencyList, adjacencyValue );
+				Board board3 = new Board( puzzle3, cc3 );
+				board3.solve();
+				break;
+			case 4:
+				adjacencyList.add( new Position(6,0));
+				adjacencyValue.add(1);
+				adjacencyList.add( new Position(5,3));
+				adjacencyValue.add(0);
+				adjacencyList.add( new Position(0,4));
+				adjacencyValue.add(2);
+				ConstraintChecker cc4 = new ConstraintChecker( adjacencyList, adjacencyValue );
+				Board board4 = new Board( puzzle4, cc4 );
+				board4.solve();
+				break;
+			default:
+				break;
 		
 		}
 	}
