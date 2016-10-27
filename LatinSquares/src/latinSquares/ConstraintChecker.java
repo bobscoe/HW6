@@ -64,8 +64,6 @@ public class ConstraintChecker {
 		return unassigned;
 	}
 	
-	
-	
 	public Node forwardCheck( Node node ) {
 		return null;
 	}
