@@ -7,7 +7,7 @@ public class Variable implements Cloneable{
 	public ArrayList<Integer> domain;
 	public Boolean hasValue = false;
 	public Integer id;
-	public int assignedValue = -1;
+	public Integer assignedValue = -1;
 	
 	public Variable( ArrayList<Integer> domain, Integer id ) {
 		this.id = id;

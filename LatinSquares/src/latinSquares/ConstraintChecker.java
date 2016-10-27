@@ -65,50 +65,42 @@ public class ConstraintChecker {
 	}
 	
 	public Node forwardCheck( Node node ) {
-		
-		for( Variable var : node.variables ) { 
-			if( var.hasValue ) continue;
-			
-			Integer size = node.state.length;
-			for( int index = 0; index < size; index++ ) {
+		int size = node.state.length;
 
-				if( node.state[index][var.id] == 'A' ) {
-					System.out.println("variable assigned here at [" + index + "][" + var.id + "]");
-				
-					//loop to remove domains horizontally from most recent assigned
-					for( int i = 0; i < size; i++ ) {
-						Variable nextVar = node.variables.get(i);
-						Integer val = index;
-						nextVar.domain.remove(val);
-					}
-					
-					//remove domains diagonally adjacent from recent assignment index
-					node = removeDiagonalAdjacentDomains( node, var.id, index, size );
-					break;
-				}
+		for( Variable var : node.variables ) { 
+			
+			if( !var.hasValue ) continue;
+			
+			for(Variable v:node.variables){
+				if(v.hasValue)
+					continue;
+				v.domain.remove(var.assignedValue);
 			}
+			
+			removeDiagonalAdjacentDomains(node, var);
 		}
-		//adjacency constraint check here
-		if(isAdjacencySatisfied(node))
-			return node;
-		return null;
+		
+//		if(isAdjacencySatisfied(node))
+//			return node;
+		return node;
 	}
 	
-	private Node removeDiagonalAdjacentDomains( Node node, Integer currVarID, int index, Integer size ) {
-		
-			Variable leftVar = node.variables.get( Math.max( 0, currVarID-1 ) );
-			Variable rightVar = node.variables.get( Math.min( currVarID+1, size ) );
-			Integer diagUpIndex = index - 1;
-			if( diagUpIndex >= 0 )
+	private void removeDiagonalAdjacentDomains( Node node,Variable currentVar ) {
+			int size = node.state.length;
+			Variable leftVar = node.variables.get( Math.max( 0, currentVar.id-1 ) );
+			Variable rightVar = node.variables.get( Math.min( currentVar.id+1, size ) );
+			Integer diagUpIndex = new Integer(currentVar.assignedValue - 1);
+			Integer diagDownIndex = new Integer(currentVar.assignedValue + 1);
+			
+			if( diagUpIndex >= 0 ){
 				leftVar.domain.remove(diagUpIndex);
 				rightVar.domain.remove(diagUpIndex);
-			
-				Integer diagDownIndex = index + 1;
-			if( diagDownIndex <= size )
+			}
+				
+			if( diagDownIndex < size ){
 				leftVar.domain.remove(diagDownIndex);
 				rightVar.domain.remove(diagDownIndex);
-		
-		return node;
+			}
 	}
 	
 	private boolean isAdjacencySatisfied(Node node){

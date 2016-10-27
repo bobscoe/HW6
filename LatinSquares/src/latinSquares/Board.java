@@ -46,6 +46,7 @@ public class Board {
 			var.assignedValue =  variable.domain.get(i);
 			var.hasValue = true;
 			child.state[var.assignedValue][var.id] = 'Q';
+			child = cc.forwardCheck(child);
 			Node result = backTrackingSearch(child);
 			if(result != null)
 				return result;
