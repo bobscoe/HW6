@@ -17,7 +17,7 @@ public class Main {
 	public static ArrayList<Position> adjacencyList = new ArrayList<Position>();
 	public static ArrayList<Integer> adjacencyValue = new ArrayList<Integer>();
 	
-	public static void main() throws NumberFormatException, IOException {
+	public static void main(String []args) throws NumberFormatException, IOException {
 		
 		//puzzle 1 list & values
 		adjacencyList.add( new Position(4,0));

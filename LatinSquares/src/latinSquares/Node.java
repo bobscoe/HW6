@@ -9,11 +9,8 @@ public class Node {
 	public ArrayList<Variable> variables;
 
 	public Node( char[][] state, ArrayList<Variable> variables, Node parentNode ) {
-		
 		this.state = state;
 		this.variables = variables;
-	
+		this.parentNode = parentNode;
 	}
-	
-
 }
