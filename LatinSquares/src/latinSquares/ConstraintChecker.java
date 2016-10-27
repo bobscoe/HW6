@@ -65,7 +65,6 @@ public class ConstraintChecker {
 	}
 	
 	public Node forwardCheck( Node node ) {
-		int size = node.state.length;
 
 		for( Variable var : node.variables ) { 
 			
@@ -80,25 +79,25 @@ public class ConstraintChecker {
 			removeDiagonalAdjacentDomains(node, var);
 		}
 		
-//		if(isAdjacencySatisfied(node))
-//			return node;
-		return node;
+		if(isAdjacencySatisfied(node))
+			return node;
+		return null;
 	}
 	
 	private void removeDiagonalAdjacentDomains( Node node,Variable currentVar ) {
 			int size = node.state.length;
 			Variable leftVar = node.variables.get( Math.max( 0, currentVar.id-1 ) );
-			Variable rightVar = node.variables.get( Math.min( currentVar.id+1, size ) );
+			Variable rightVar = node.variables.get( Math.min( currentVar.id+1, size-1 ) );
 			Integer diagUpIndex = new Integer(currentVar.assignedValue - 1);
 			Integer diagDownIndex = new Integer(currentVar.assignedValue + 1);
 			
-			if( diagUpIndex >= 0 ){
+			if(!leftVar.hasValue){
 				leftVar.domain.remove(diagUpIndex);
-				rightVar.domain.remove(diagUpIndex);
-			}
-				
-			if( diagDownIndex < size ){
 				leftVar.domain.remove(diagDownIndex);
+			}
+			
+			if(!rightVar.hasValue){
+				rightVar.domain.remove(diagUpIndex);
 				rightVar.domain.remove(diagDownIndex);
 			}
 	}
@@ -109,10 +108,45 @@ public class ConstraintChecker {
 			int adjacentShadedSquares = getAdjacentShadedCellsCount(node,position);
 			if(adjacentShadedSquares > adjacencyValues.get(i))
 				return false;
+			if(adjacentShadedSquares < adjacencyValues.get(i)){
+				for(int j=position.column-1;j<=position.column+1;j++){
+					if(j<0 || j>node.state.length-1)
+						continue;
+					Variable adjacentVar = node.variables.get(j);
+					if(adjacentVar!=null && !adjacentVar.hasValue)
+						return true;
+				}
+				return false;
+			}else
+				reduceDomainThroughAdjacency(node,position);
 		}
 		return true;
 	}
 	
+	private void reduceDomainThroughAdjacency(Node node, Position position) {
+		int top = Math.max(position.row - 1,0);
+		int left = Math.max(position.column - 1,0);
+		int right = Math.min(position.column+1,node.state.length-1);
+		int bottom = Math.min(position.row+1,node.state.length-1);
+
+		for(int j=left;j<=right;j++){
+			Variable var = node.variables.get(j);
+			if(!var.hasValue){
+				for(int i = top; i<=bottom;i++){
+					var.domain.remove(new Integer(i));
+				}
+			}
+		}
+		
+	}
+	
+	public boolean hasLegalValues(Node node){
+		for(Variable var:node.variables)
+			if(!var.hasValue && var.domain.size() == 0)
+				return false;
+		return true;
+	}
+
 	private int getAdjacentShadedCellsCount(Node node,Position position){
 		int count = 0;
 		int top = Math.max(position.row - 1,0);

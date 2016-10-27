@@ -6,6 +6,8 @@ public class Board {
 
 	public char[][] board;
 	ConstraintChecker cc;
+	private Node solution;
+	private int partialAssignments = 0;
 	
 	public Board( char[][] board, ConstraintChecker cc ) {
 		
@@ -14,6 +16,26 @@ public class Board {
 		
 	}
 	
+	public Node getSolution() throws Exception{
+		if(this.solution!=null){
+			replaceXWithDigits(this.solution);
+			return this.solution;
+		}
+		throw new Exception("Solution not found");
+	}
+	
+	public int getPartialAssignmentCount(){
+		return this.partialAssignments;
+	}
+	
+	private void replaceXWithDigits(Node node) {
+		for(int i=0;i<cc.adjacencyList.size();i++){
+			Position position = cc.adjacencyList.get(i);
+			node.state[position.row][position.column] =  (char) (cc.adjacencyValues.get(i)+'0');
+		}
+		
+	}
+
 	public boolean solve() {
 		//init domain for variables
 		Integer size = board.length;
@@ -29,8 +51,8 @@ public class Board {
 		}
 		
 		Node rootNode = new Node( this.board, variables, null );
-		Node solution = backTrackingSearch( rootNode );
-		return false;
+		this.solution = backTrackingSearch( rootNode );
+		return this.solution!=null;
 	}
 	
 	public Node backTrackingSearch( Node node ) {
@@ -42,14 +64,18 @@ public class Board {
 		Node child = new Node(deepCopy(node.state),deepCopy(node.variables),node);
 		for(int i=0; i<variable.domain.size();i++)
 		{
+			partialAssignments++;
 			Variable var = child.variables.get(variable.id);
 			var.assignedValue =  variable.domain.get(i);
 			var.hasValue = true;
 			child.state[var.assignedValue][var.id] = 'Q';
-			child = cc.forwardCheck(child);
-			Node result = backTrackingSearch(child);
-			if(result != null)
-				return result;
+			Node dummy = new Node(deepCopy(child.state),deepCopy(child.variables),null);
+			dummy =  cc.forwardCheck(dummy);
+			if(dummy!=null && cc.hasLegalValues(dummy)){
+				Node result = backTrackingSearch(dummy);
+				if(result != null)
+					return result;
+			}
 			child.state[var.assignedValue][var.id] = '-';
 		}
 		return null;

@@ -16,6 +16,12 @@ public class Variable implements Cloneable{
 	
 	@Override
 	public Object clone() throws CloneNotSupportedException{
-		return super.clone();
+		ArrayList<Integer> domainclone = new ArrayList<Integer>();
+		for(Integer value : domain)
+			domainclone.add(new Integer(value.intValue()));
+		Variable var =  new Variable(domainclone,new Integer(this.id.intValue()));
+		var.hasValue = this.hasValue.booleanValue();
+		var.assignedValue = this.assignedValue.intValue();
+		return var;
 	}
 }
