@@ -65,6 +65,49 @@ public class ConstraintChecker {
 	}
 	
 	public Node forwardCheck( Node node ) {
-		return null;
+		
+		for( Variable var : node.variables ) { 
+			if( var.hasValue ) continue;
+			
+			Integer size = node.state.length;
+			for( int index = 0; index < size; index++ ) {
+
+				if( node.state[index][var.id] == 'A' ) {
+					System.out.println("variable assigned here at [" + index + "][" + var.id + "]");
+				
+					//loop to remove domains horizontally from most recent assigned
+					for( int i = 0; i < size; i++ ) {
+						Variable nextVar = node.variables.get(i);
+						Integer val = index;
+						nextVar.domain.remove(val);
+					}
+					
+					//remove domains diagonally adjacent from recent assignment index
+					node = removeDiagonalAdjacentDomains( node, var.id, index, size );
+					break;
+				}
+			}
+		}
+		//adjacency constraint check here
+		
+		//return updated node
+		return node;
+	}
+	
+	private Node removeDiagonalAdjacentDomains( Node node, Integer currVarID, int index, Integer size ) {
+		
+			Variable leftVar = node.variables.get( Math.max( 0, currVarID-1 ) );
+			Variable rightVar = node.variables.get( Math.min( currVarID+1, size ) );
+			Integer diagUpIndex = index - 1;
+			if( diagUpIndex >= 0 )
+				leftVar.domain.remove(diagUpIndex);
+				rightVar.domain.remove(diagUpIndex);
+			
+				Integer diagDownIndex = index + 1;
+			if( diagDownIndex <= size )
+				leftVar.domain.remove(diagDownIndex);
+				rightVar.domain.remove(diagDownIndex);
+		
+		return node;
 	}
 }
