@@ -45,9 +45,11 @@ public class Board {
 			Variable var = child.variables.get(variable.id);
 			var.assignedValue =  variable.domain.get(i);
 			var.hasValue = true;
+			child.state[var.assignedValue][var.id] = 'Q';
 			Node result = backTrackingSearch(child);
 			if(result != null)
 				return result;
+			child.state[var.assignedValue][var.id] = '-';
 		}
 		return null;
 	}
@@ -73,9 +75,10 @@ public class Board {
 	}
 	
 	private char[][] deepCopy(char[][] state){
-		char[][] copy = new char[4][4];
-		for(int i=0;i<4;i++)
-			for(int j=0;j<4;j++)
+		int size = state.length;
+		char[][] copy = new char[size][size];
+		for(int i=0;i<size;i++)
+			for(int j=0;j<size;j++)
 				copy[i][j] = state[i][j];
 		return copy;
 	}

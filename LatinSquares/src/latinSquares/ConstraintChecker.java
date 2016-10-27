@@ -89,9 +89,9 @@ public class ConstraintChecker {
 			}
 		}
 		//adjacency constraint check here
-		
-		//return updated node
-		return node;
+		if(isAdjacencySatisfied(node))
+			return node;
+		return null;
 	}
 	
 	private Node removeDiagonalAdjacentDomains( Node node, Integer currVarID, int index, Integer size ) {
@@ -109,5 +109,29 @@ public class ConstraintChecker {
 				rightVar.domain.remove(diagDownIndex);
 		
 		return node;
+	}
+	
+	private boolean isAdjacencySatisfied(Node node){
+		for(int i=0;i<adjacencyList.size();i++){
+			Position position = adjacencyList.get(i);
+			int adjacentShadedSquares = getAdjacentShadedCellsCount(node,position);
+			if(adjacentShadedSquares > adjacencyValues.get(i))
+				return false;
+		}
+		return true;
+	}
+	
+	private int getAdjacentShadedCellsCount(Node node,Position position){
+		int count = 0;
+		int top = Math.max(position.row - 1,0);
+		int left = Math.max(position.column - 1,0);
+		int right = Math.min(position.column+1,node.state.length-1);
+		int bottom = Math.min(position.row+1,node.state.length-1);
+		for(int i = top; i<=bottom;i++){
+			for(int j=left;j<=right;j++)
+				if(node.state[i][j]== 'Q')
+					count++;
+		}
+		return count;
 	}
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class Variable implements Cloneable{
 
-	ArrayList<Integer> domain;
-	Boolean hasValue = false;
-	Integer id;
+	public ArrayList<Integer> domain;
+	public Boolean hasValue = false;
+	public Integer id;
 	public int assignedValue = -1;
 	
 	public Variable( ArrayList<Integer> domain, Integer id ) {
